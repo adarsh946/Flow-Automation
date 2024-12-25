@@ -9,3 +9,5 @@ const triggerSchema = new mongoose.Schema({
     type: JSON,
   },
 });
+
+export const trigger = mongoose.model("trigger", triggerSchema);

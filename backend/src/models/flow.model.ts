@@ -21,3 +21,5 @@ const flowSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+export const flow = mongoose.model("flow", flowSchema);

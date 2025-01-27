@@ -1,5 +1,5 @@
 {
-  "name": "webhook",
+  "name": "processor",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@repo/db": "*",
-    "@types/express": "^5.0.0",
-    "express": "^4.21.2"
-  }
+  "description": ""
 }

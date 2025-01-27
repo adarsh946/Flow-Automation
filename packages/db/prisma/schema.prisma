@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int  @default(autoincrement())
+  name      String
+  eamil     String   @unique
+  password  String
+}
+
+model Zap {
+  id        String @id @default(uuid())
+  trigger   Trigger[]
+  action    Action[]
+}
+
+model Trigger {
+  id       String @id @default(uuid())
+  triggerId String
+  zapId     String
+  type      AvailableTrigger @relation(fields: [triggerId], references: [id])
+  zap       Zap @relation(fields: [zapId], references: [id])
+}
+
+model Action {
+  id        String  @id @default(uuid())
+  actionId  String
+  zapId     String
+  type      AvailableAction @relation(fields: [actionId], references: [id])
+  zap       Zap @relation(fields: [zapId], references: [id])
+}
+
+model AvailableAction {
+  id        String  @id  @default(uuid())
+  action    Action[]
+}
+
+model AvailableTrigger {
+  id       String  @id @default(uuid())
+  trigger  Trigger[]
+}

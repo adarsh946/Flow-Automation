@@ -118,7 +118,7 @@ export const signinController = async (req: Request, res: any) => {
   }
 };
 
-export const getUserController = async (req: Request, res: Response) => {
+export const getUserController = async (req: Request, res: any) => {
   //@ts-ignore
   const id = req.id;
   try {

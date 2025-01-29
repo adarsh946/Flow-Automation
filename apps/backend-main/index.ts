@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import { authRouter } from "./routes/user.routes";
 import { zapRouter } from "./routes/zap.routes";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());

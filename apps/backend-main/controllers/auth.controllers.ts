@@ -1,13 +1,27 @@
 import client from "@repo/db";
 import { signinSchema, signupSchema } from "../types/type";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { JWT_PASSWORD } from "../config";
 
 export const signupController = async (req: Request, res: any) => {
+  const parsedData = signupSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    return res.status(403).json({
+      message: "Unable to parse data",
+    });
+  }
+
   try {
-    const parsedData = signupSchema.safeParse(req.body);
-    if (!parsedData.success) {
+    const userExists = await client.user.findFirst({
+      where: {
+        eamil: parsedData.data.email,
+      },
+    });
+
+    if (userExists) {
       return res.status(403).json({
-        message: "Unable to parse data",
+        message: "user already exists!",
       });
     }
 
@@ -32,6 +46,8 @@ export const signupController = async (req: Request, res: any) => {
       name: signup.name,
       email: signup.eamil,
     });
+
+    //  verify by sending email
   } catch (error) {
     res.status(403).json({
       message: "unable to signup!!",
@@ -39,11 +55,64 @@ export const signupController = async (req: Request, res: any) => {
   }
 };
 
-const signinController = async (req: Request, res: any) => {
+export const signinController = async (req: Request, res: any) => {
   const pasrsedData = signinSchema.safeParse(req.body);
   if (!pasrsedData.success) {
     return res.status(403).josn({
       message: "unable to parse data",
+    });
+  }
+
+  try {
+    const user = await client.user.findUnique({
+      where: {
+        eamil: pasrsedData.data.email,
+      },
+    });
+
+    if (!user) {
+      return res.status(403).josn({
+        message: "user not found",
+      });
+    }
+
+    const hashedPassword = await bcrypt.compare(
+      user?.password,
+      pasrsedData.data.password
+    );
+    if (!hashedPassword) {
+      return res.status(403).json({
+        message: "password do not match",
+      });
+    }
+
+    const signin = await client.user.findFirst({
+      where: {
+        eamil: user.eamil,
+        password: pasrsedData.data.password,
+      },
+    });
+
+    if (!signin) {
+      return res.status(403).josn({
+        message: "unable to signin",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: signin.id,
+      },
+      JWT_PASSWORD
+    );
+
+    res.status(200).json({
+      message: "sigin successfull",
+      token,
+    });
+  } catch (error) {
+    res.status(403).json({
+      message: "unable to sigin the user!!",
     });
   }
 };

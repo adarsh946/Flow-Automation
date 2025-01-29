@@ -3,6 +3,7 @@ import { signinSchema, signupSchema } from "../types/type";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "../config";
+import { Request, request, Response } from "express";
 
 export const signupController = async (req: Request, res: any) => {
   const parsedData = signupSchema.safeParse(req.body);
@@ -113,6 +114,36 @@ export const signinController = async (req: Request, res: any) => {
   } catch (error) {
     res.status(403).json({
       message: "unable to sigin the user!!",
+    });
+  }
+};
+
+export const getUserController = async (req: Request, res: Response) => {
+  //@ts-ignore
+  const id = req.id;
+  try {
+    const user = client.user.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        name: true,
+        eamil: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(403).json({
+        message: "user not found",
+      });
+    }
+
+    res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    res.status(403).json({
+      message: "user not found",
     });
   }
 };

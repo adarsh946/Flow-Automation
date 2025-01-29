@@ -12,11 +12,15 @@ export const zapController = async (req: Request, res: any) => {
   //@ts-ignore
   const id = req.id;
 
-  const zapId = await client.$transaction(async (tx) => {
-    const zap = await tx.zap.create({
+  try {
+    const zap = await client.zap.create({
       data: {
         userId: id,
-        trigger: "",
+        trigger: {
+          create: {
+            triggerId: parsedData.data.trigger,
+          },
+        },
         action: {
           create: parsedData.data.action.map((x, index) => ({
             actionId: x.availableActionId,
@@ -27,20 +31,104 @@ export const zapController = async (req: Request, res: any) => {
       },
     });
 
-    const trigger = await tx.trigger.create({
-      data: {
-        triggerId: parsedData.data.trigger,
-        zapId: zap.id,
+    if (!zap) {
+      return res.status(403).json({
+        message: "unable to create the zap",
+      });
+    }
+
+    return res.status(200).json({
+      zap,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      message: "unable to create zap",
+    });
+  }
+};
+
+export async function getZapController({
+  req,
+  res,
+}: {
+  req: Request;
+  res: any;
+}): Promise<any> {
+  //@ts-ignore
+  const id = req.id;
+
+  try {
+    const zaps = await client.zap.findMany({
+      where: {
+        userId: id,
+      },
+      include: {
+        action: {
+          include: {
+            type: true,
+          },
+        },
+        trigger: {
+          include: {
+            type: true,
+          },
+        },
       },
     });
 
-    await tx.zap.update({
+    if (!zaps) {
+      return res.status(403).josn({
+        message: "unable to find zaps",
+      });
+    }
+
+    return res.status(200).json({
+      zaps,
+    });
+  } catch (e) {
+    return res.status(403).json({
+      message: "unable to find zaps !!",
+    });
+  }
+}
+
+export const getIndividualZapController = async (req: any, res: any) => {
+  //@ts-ignore
+  const id = req.id;
+  const zapId = req.params.zapId;
+
+  try {
+    const zap = await client.zap.findFirst({
       where: {
-        id: zap.id,
+        userId: id,
+        id: zapId,
       },
-      data: {
-        trigger: trigger.id,
+      include: {
+        trigger: {
+          include: {
+            type: true,
+          },
+        },
+        action: {
+          include: {
+            type: true,
+          },
+        },
       },
     });
-  });
+
+    if (!zap) {
+      return res.status(403).json({
+        message: "unable to find zaps for this zapId",
+      });
+    }
+
+    return res.status(200).json({
+      zap,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      message: "unable to find zaps for this zapId !!",
+    });
+  }
 };

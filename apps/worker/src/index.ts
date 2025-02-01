@@ -6,7 +6,7 @@ const kafka = new Kafka({
 });
 
 const TOPIC_NAME = "zap-events";
-const consumer = kafka.consumer({ groupId: "group-1" });
+const consumer = kafka.consumer({ groupId: "worker-primary" });
 
 const run = async () => {
   await consumer.connect();
@@ -30,3 +30,5 @@ const run = async () => {
     },
   });
 };
+
+run();

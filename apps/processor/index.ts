@@ -3,7 +3,7 @@ import client from "@repo/db";
 
 const TOPIC_NAME = "zap-events";
 const kafka = new Kafka({
-  clientId: "processor",
+  clientId: "unique-id",
   brokers: ["localhost:9092"],
 });
 

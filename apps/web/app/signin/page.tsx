@@ -1,12 +1,12 @@
 import React from "react";
 import Input from "../components/input/Input";
 
-function signup() {
+function signin() {
   return (
     <div className="h-screen w-full flex justify-between ">
       <div className="w-full md:w-2/5 bg-white p-8 shadow-lg rounded-lg flex flex-col ">
         <div className="text-5xl font-bold mb-10 text-center">
-          <h1>Sign Up</h1>
+          <h1>Sign In</h1>
         </div>
         <div className="flex flex-row justify-center items-center">
           <button className="w-[60%] flex items-center justify-center gap-2 bg-gray-100 py-2 px-4 rounded-md border border-gray-300 hover:bg-gray-200 transition duration-300 cursor-pointer">
@@ -19,12 +19,10 @@ function signup() {
           </button>
         </div>
         <div className="my-4 text-gray-500 text-center">
-          Or sign up with your email:
+          Or sign in with your email:
         </div>
         <div>
           <form className="space-y-4">
-            <Input lable="Name" placeholder="Name" type="text" />
-
             <Input lable="Email" placeholder="Email Address" type="text" />
 
             <Input lable="Password" placeholder="Password" type="password" />
@@ -64,4 +62,4 @@ function signup() {
   );
 }
 
-export default signup;
+export default signin;

@@ -1,13 +1,41 @@
 import React from "react";
+import Input from "../components/input/Input";
 
 function signup() {
   return (
     <div className="h-screen w-full flex justify-between ">
-      <div>
-        <div>
+      <div className="w-full md:w-2/5 bg-white p-8 shadow-lg rounded-lg flex flex-col ">
+        <div className="text-5xl font-bold mb-10 text-center">
           <h1>Sign Up</h1>
         </div>
-        <div></div>
+        <div className="flex flex-row justify-center items-center">
+          <button className="w-[60%] flex items-center justify-center gap-2 bg-gray-100 py-2 px-4 rounded-md border border-gray-300 hover:bg-gray-200">
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            <span>Google</span>
+          </button>
+        </div>
+        <div className="my-4 text-gray-500 text-center">
+          Or sign up with your email:
+        </div>
+        <div>
+          <form className="space-y-4">
+            <Input lable="Name" placeholder="Name" type="text" />
+
+            <Input lable="Email" placeholder="Email Address" type="text" />
+
+            <Input lable="Password" placeholder="Password" type="password" />
+
+            <div className="flex justify-center items-center mt-10">
+              <button className="w-[60%]  bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-md font-semibold">
+                Sign up for FREE
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
       <div className="w-[60%] h-screen bg-[linear-gradient(157deg,#240342_0%,#b55dcd_100%)] text-white">
         <div className="flex justify-end text-4xl my-7 mr-10 font-extrabold">
